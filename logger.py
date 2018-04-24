@@ -1,5 +1,7 @@
 import datetime
 import sys
+from traceback import extract_stack
+from os.path import splitext
 
 TRACE = 4
 INFO  = 3
@@ -11,26 +13,28 @@ loglevel = NONE
 logfile = sys.stderr
 
 def __write(s,l):
+    frame = extract_stack(limit=1)[0][0]
+    frame = splitext(frame)[0]
     global logfile
     ts = datetime.datetime.now().strftime("%x %X")
-    logfile.write("%s [%s] %s -- %s" % (ts, self.name.ljust(8),l, s))
+    logfile.write("%s [%s] %s -- %s" % (ts, frame.ljust(8),l, s))
           
 def trace(s):
     global loglevel
-    if loglevel >= TRACE or self.loglevel >= TRACE:
+    if loglevel >= TRACE:
             __write(s,'TRACE')
                             
 def info(s):
     global loglevel
-    if loglevel >= INFO or self.loglevel >= INFO:
+    if loglevel >= INFO:
             __write(s,'INFO ')
                             
 def warn(s):
     global loglevel
-    if loglevel >= WARN or self.loglevel >= WARN:
+    if loglevel >= WARN:
             __write(s,'WARN ')
                             
 def error(s):
     global loglevel
-    if loglevel >= ERROR or self.loglevel >= ERROR:
+    if loglevel >= ERROR:
             __write(s,'ERROR')
