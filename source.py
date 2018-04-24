@@ -12,16 +12,17 @@ class Source(Framework):
     
     def __iter__(self):
         print("__iter__")
-        return self.__gen__()
+        self.n = 0
+        return self
+        #return self.__gen__()
 
     def __next__(self):
-        info("run starts")
-        for n in range(10):
-            msg = BaseMessage()
-            msg.payload = n
-            trace("generate message %d" % n)
-            yield(msg)
-        info("run ends - %d cycles" % n)
+        if self.n > 20:
+            raise StopIteration
+        msg = BaseMessage()
+        msg.payload = self.n
+        self.n += 2
+        trace("generate message %d" % self.n)
 
     def __gen__(self):
         print("__iter__")

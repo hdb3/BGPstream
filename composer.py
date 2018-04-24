@@ -19,7 +19,6 @@ class Compose(Framework):
         sink = Sink(source)
         sink.run()
         #translator = Translator()
-        #sink.bind(translator)
         trace('end')
 
 loglevel=TRACE

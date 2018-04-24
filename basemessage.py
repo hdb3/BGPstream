@@ -1,6 +1,6 @@
 # basemessage.py
 
-# potentially could just puth this in the framework file
+# potentially could just put this in the framework file
 
 class BaseMessage:
     pass
