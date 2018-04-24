@@ -1,11 +1,25 @@
-composer.py
-    import sink
-    import source
-    import translator
+#!/usr/bin/env python
 
-sink = Sink(filename)
-source = Source(network address)
-translator = Translator()
+# composer.py
 
-translator.bind(source)
-sink.bind(translator)
+from framework import Framework
+from logger import *
+import sink
+import source
+#import translator
+
+class Compose(Framework):
+
+    def __init__(self,loglevel):
+        Framework.__init__(self,loglevel)
+
+    def run():
+        trace('start')
+        source = Source()
+        sink = Sink(source)
+        #translator = Translator()
+        sink.bind(translator)
+        trace('end')
+
+loglevel = TRACE
+Compose(TRACE).run()

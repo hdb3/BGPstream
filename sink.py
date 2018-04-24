@@ -1,19 +1,21 @@
 # sink.py
 
-class Sink:
-from sys import argv
-from os.path import basename,splitext
 from logger import trace, info, warn, error
+from framework import Framework
 
-def __init__(source):
-    self.input_type = type(MyInputMessage)
-    assert isinstance(source,Source)
-    assert source.output_type == self.input_type 
-    self.next = source.next
-    self.name = splitext(basename(argv[0]))[0]
+class Sink(Framework):
+
+    def __init__(source):
+        Framework.__init__(self)
+        self.input_type = type(BaseMessage)
+        assert isinstance(source,Source)
+        assert source.output_type == self.input_type 
+        self.next = source.next
     
-def run():
-    info("run starts")
-    for msg in self.next:
-        trace("process message %d" % n)
-    info("run ends")
+    def run():
+        info("run starts")
+        n = 0
+        for msg in self.next:
+            n += 1
+            trace("process message %d" % n)
+        info("run ends - %d cycles" % n)

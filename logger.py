@@ -1,28 +1,36 @@
-from datetime.datetime import now
-
+import datetime
+import sys
 
 TRACE = 4
 INFO  = 3
 WARN  = 2
 ERROR = 1
+NONE  = 0
 
-def __write(s,l,f):
+loglevel = NONE 
+logfile = sys.stderr
+
+def __write(s,l):
     global logfile
-    ts = now().strftime("%x %X")
-    logfile.write("%s [%s] %s -- %s" % (ts, self.name.ljust(8),l, s)
+    ts = datetime.datetime.now().strftime("%x %X")
+    logfile.write("%s [%s] %s -- %s" % (ts, self.name.ljust(8),l, s))
           
 def trace(s):
-    if log_level >= TRACE or self.log_level >= TRACE:
-            __write(s,'TRACE',self)
+    global loglevel
+    if loglevel >= TRACE or self.loglevel >= TRACE:
+            __write(s,'TRACE')
                             
-def trace(s):
-    if log_level >= TRACE or self.log_level >= TRACE:
-            __write(s,'TRACE',self)
+def info(s):
+    global loglevel
+    if loglevel >= INFO or self.loglevel >= INFO:
+            __write(s,'INFO ')
                             
-def trace(s):
-    if log_level >= TRACE or self.log_level >= TRACE:
-            __write(s,'TRACE',self)
+def warn(s):
+    global loglevel
+    if loglevel >= WARN or self.loglevel >= WARN:
+            __write(s,'WARN ')
                             
-def trace(s):
-    if log_level >= TRACE or self.log_level >= TRACE:
-            __write(s,'TRACE',self)
+def error(s):
+    global loglevel
+    if loglevel >= ERROR or self.loglevel >= ERROR:
+            __write(s,'ERROR')
