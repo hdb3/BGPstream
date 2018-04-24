@@ -1,0 +1,12 @@
+functional modules in this library comsume and emit streams of objects
+At a base level the streams correspond to network or filesystem endpoints.
+Above this level messages are objects of various classes
+modules cooperate using function/method calls to exchange message objects
+modules are all 'stream processors' - some are sources or sinks - mostly network of filesystem based endpoints
+- others both emit and consume objects.
+a module acting as a consumer calls an iterator provided by a message source
+sources and sinks are bound together by a framework module which instantiates stream processors and binds them
+All processors are immpleneted as custom class objects derived from some basic framework classes
+The bind operation calls a method on a consumer, passing in the source object
+The consumer then calls an iterator provided by the source object.
+For stream processors which have both source and sink capability the bind is done twice
