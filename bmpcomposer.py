@@ -3,7 +3,8 @@
 # bgpcomposer.py
 
 import sys
-from nullsink import NullSink
+#from nullsink import NullSink
+from bmpsink import BMPSink
 from wfBMP import BStoBMPwf
 from filesource import FileSource
 from compose import Compose
@@ -15,7 +16,7 @@ class BMPCompose(Compose):
         show('start')
         source = FileSource(fn)
         translator = BStoBMPwf(source)
-        sink = NullSink(translator)
+        sink = BMPSink(translator)
         sink.run()
         show('end')
 
