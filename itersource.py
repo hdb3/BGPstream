@@ -1,4 +1,4 @@
-# iter-source.py
+# itersource.py
 
 # skeleton source using iterative style
 

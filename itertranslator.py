@@ -1,4 +1,4 @@
-# iter-translator.py
+# itertranslator.py
 
 from logger import trace, info, show, warn, error
 from framework import Framework
