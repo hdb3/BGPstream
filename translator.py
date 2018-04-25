@@ -13,9 +13,9 @@ class Translator(Source):
         self.input_type = type(BaseMessage)
         assert isinstance(source,Source)
         assert source.output_type == self.input_type 
-        self.next = source
-        self.iterator_style = True
-        info("using self.iterator_style = True")
+        self.next = source.next
+        self.iterator_style = False
+        info("using self.iterator_style = %s" % str(self.iterator_style))
     
     def __iter__(self):
         if self.iterator_style:

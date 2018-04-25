@@ -13,8 +13,9 @@ loglevel = TRACE
 logfile = sys.stderr
 
 def __write(s,l):
-    if l == 'TRACE':
-        #print(extract_stack())
+    if l == 'STACK':
+        loc = str([(s[0],s[1],s[2]) for s in extract_stack()])
+    elif l == 'TRACE':
         frame = extract_stack(limit=3)[0]
         loc = splitext(basename(frame[0]))[0] + '.' + frame[2] + '(' + str(frame[1]) + ')'
         loc = loc.ljust(30)
@@ -25,27 +26,33 @@ def __write(s,l):
     ts = datetime.datetime.now().strftime("%x %X")
     logfile.write("%s %s [%s] -- %s\n" % (l, ts, loc, s))
           
-def debug(s):
+def stack_trace():
     global loglevel
-    if loglevel >= DEBUG:
-            __write(s,'DEBUG')
-                            
+    if loglevel >= TRACE:
+        __write("",'STACK')
+
 def trace(s):
     global loglevel
     if loglevel >= TRACE:
-            __write(s,'TRACE')
+        __write(s,'TRACE')
                             
 def info(s):
     global loglevel
     if loglevel >= INFO:
-            __write(s,'INFO ')
+        __write(s,'INFO ')
                             
 def warn(s):
     global loglevel
     if loglevel >= WARN:
-            __write(s,'WARN ')
+        __write(s,'WARN ')
                             
 def error(s):
     global loglevel
     if loglevel >= ERROR:
-            __write(s,'ERROR')
+        __write(s,'ERROR')
+
+def set_loglevel(l):
+    assert l in (NONE, ERROR, WARN, INFO, TRACE)
+    global loglevel
+    loglevel = l
+
