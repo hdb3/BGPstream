@@ -1,43 +1,40 @@
-# ranslator.py
-# skeleton source using the default, iterative, style
+# translator.py
 
 from logger import trace, info, show, warn, error
 from framework import Framework
 from basemessage import BaseMessage
-from source import Source
+from translator import Translator
 
-class Translator(Source):
+class MyTranslator(Translator):
 
     def __init__(self,source):
-
-        info("init")
-        Framework.__init__(self)
         self.output_type = type(BaseMessage)
         self.input_type = type(BaseMessage)
-        s = Source()
-        assert issubclass(type(source),Source)
-        assert source.output_type == self.input_type 
-        self.next = source
+        #assert issubclass(source,Source)
+        #assert source.output_type == self.input_type 
+        #self.next = source
+        Translator.__init__(self,source)
     
     def __iter__(self):
+        info("ITER START")
+        self.n = 0
         self.iter = iter(self.next)
-        info("start")
         return self
 
     def __next__(self):
         try:
             msg = next(self.iter)
-            info("next")
+            self.n += 1
+            info("ITER NEXT")
             return self.translate(msg)
         except StopIteration:
-            info("stop")
+            info("ITER END (%d cycles)" % self.n)
             raise
 
     def translate(self,msg):
         assert issubclass(type(msg),BaseMessage)
-        # do something to the message......
-        info("translate")
+        show("In %d" % msg.payload)
+        if 0 == msg.payload % 2:
+            msg.payload = 0-msg.payload
+        show("Out %d" % msg.payload)
         return msg
-
-
-

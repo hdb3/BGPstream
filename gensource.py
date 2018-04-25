@@ -1,15 +1,19 @@
 # gensource.py
 
+# this is an alternate implmentation which uses generators rather than iterators
+# it is derived from the default class in order to ensur that class comparison checks operate as expected
+
 from logger import trace, info, show, warn, error
 from framework import Framework
 from basemessage import BaseMessage
 
-class Source(Framework):
+class GenSource(Source):
 
     def __init__(self):
         info("init")
-        Framework.__init__(self)
+        Source.__init__(self)
         self.output_type = type(BaseMessage)
+        delattr(self,__next__)
     
     def __iter__(self):
         info("iter")
