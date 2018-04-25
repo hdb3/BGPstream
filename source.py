@@ -1,6 +1,6 @@
 # source.py
 
-from logger import trace, info, warn, error
+from logger import trace, info, show, warn, error
 from framework import Framework
 from basemessage import BaseMessage
 
@@ -28,6 +28,7 @@ class Source(Framework):
             raise StopIteration
         msg = BaseMessage()
         msg.payload = self.n
+        show("Out %d" % msg.payload)
         self.n += 1
         return msg
 
@@ -37,5 +38,6 @@ class Source(Framework):
             info("GEN NEXT")
             msg = BaseMessage()
             msg.payload = n
+            show("Out %d" % msg.payload)
             yield msg
         info("GEN END (%d cycles)" % (n+1))

@@ -29,5 +29,5 @@ class Compose(Framework):
         sink.run()
         trace('end')
 
-set_loglevel(INFO)
-Compose().run1()
+set_loglevel(SHOW)
+Compose().run2()

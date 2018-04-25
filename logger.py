@@ -3,8 +3,9 @@ import sys
 from traceback import extract_stack
 from os.path import basename,splitext
 
-TRACE = 4
-INFO  = 3
+TRACE = 5
+INFO  = 4
+SHOW  = 3
 WARN  = 2
 ERROR = 1
 NONE  = 0
@@ -41,6 +42,11 @@ def info(s):
     if loglevel >= INFO:
         __write(s,'INFO ')
                             
+def show(s):
+    global loglevel
+    if loglevel >= SHOW:
+        __write(s,'SHOW ')
+                            
 def warn(s):
     global loglevel
     if loglevel >= WARN:
@@ -52,7 +58,7 @@ def error(s):
         __write(s,'ERROR')
 
 def set_loglevel(l):
-    assert l in (NONE, ERROR, WARN, INFO, TRACE)
+    assert l in (NONE, ERROR, WARN, SHOW, INFO, TRACE)
     global loglevel
     loglevel = l
 
