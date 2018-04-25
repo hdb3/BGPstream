@@ -14,10 +14,12 @@ logfile = sys.stderr
 
 def __write(s,l):
     if l == 'TRACE':
-        frame = extract_stack(limit=4)[0]
+        #print(extract_stack())
+        frame = extract_stack(limit=3)[0]
         loc = splitext(basename(frame[0]))[0] + '.' + frame[2] + '(' + str(frame[1]) + ')'
+        loc = loc.ljust(30)
     else:
-        frame = extract_stack(limit=4)[0][0]
+        frame = extract_stack(limit=3)[0][0]
         loc = splitext(basename(frame))[0].ljust(8)
     global logfile
     ts = datetime.datetime.now().strftime("%x %X")

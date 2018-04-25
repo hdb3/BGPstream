@@ -7,29 +7,32 @@ from basemessage import BaseMessage
 class Source(Framework):
 
     def __init__(self):
+        trace("0")
         Framework.__init__(self)
         self.output_type = type(BaseMessage)
     
     def __iter__(self):
-        print("__iter__")
+        trace("1")
         self.n = 0
         return self
         #return self.__gen__()
 
     def __next__(self):
-        if self.n > 20:
+        trace("2")
+        if self.n > 5:
             raise StopIteration
         msg = BaseMessage()
         msg.payload = self.n
-        self.n += 2
+        self.n += 1
         trace("generate message %d" % self.n)
 
     def __gen__(self):
+        trace("3")
         print("__iter__")
         info("run starts")
-        for n in range(10):
+        for n in range(5):
+            trace("4")
             msg = BaseMessage()
             msg.payload = n
-            trace("generate message %d" % n)
             yield(msg)
         info("run ends - %d cycles" % n)

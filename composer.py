@@ -6,20 +6,28 @@ from framework import Framework
 from logger import *
 from sink import Sink
 from source import Source
-#import translator
+from translator import Translator
 
 class Compose(Framework):
 
     def __init__(self):
         Framework.__init__(self)
 
-    def run(self):
+    def run1(self):
         trace('start')
         source = Source()
         sink = Sink(source)
         sink.run()
-        #translator = Translator()
+        trace('end')
+
+    def run2(self):
+        trace('start')
+        source = Source()
+        translator = Translator(source)
+        sink = Sink(translator)
+        #exit()
+        sink.run()
         trace('end')
 
 loglevel=TRACE
-Compose().run()
+Compose().run2()

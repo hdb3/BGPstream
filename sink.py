@@ -19,5 +19,5 @@ class Sink(Framework):
         n = 0
         for msg in self.next:
             n += 1
-            info("process message %d" % n)
+            trace("process message %d" % n)
         info("run ends - %d cycles" % n)
