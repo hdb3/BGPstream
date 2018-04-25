@@ -8,5 +8,5 @@ class BaseMessage:
 class ByteStream(BaseMessage):
     pass
 
-class WireMessage(BaseMessage):
+class WireMessage(bytearray):
     pass
