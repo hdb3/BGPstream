@@ -3,16 +3,16 @@
 from logger import trace, info, show, warn, error
 from framework import Framework
 from basemessage import BaseMessage
-from sink import Sink
+import sink
 
-class MySink(Sink):
+class Sink(sink.Sink):
 
     def __init__(self,source):
         self.input_type = type(BaseMessage)
         #assert issubclass(source,Source)
         #assert source.output_type == self.input_type 
         #self.next = source
-        Sink.__init__(self,source)
+        sink.Sink.__init__(self,source)
     
     def run(self):
         info("run starts")

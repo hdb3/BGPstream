@@ -1,0 +1,8 @@
+# 
+# kafkacomposer.yml
+#
+
+bootstrap_servers: bmp.bgpstream.caida.org:9092
+client_id: lancaster_university
+topic: openbmp.router--route-views.routeviews.org.peer-as--7018.bmp_raw
+name: routeviews.org.peer-as-7018
