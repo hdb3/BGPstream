@@ -58,7 +58,26 @@ def error(s):
         __write(s,'ERROR')
 
 def set_loglevel(l):
+    if isinstance(l,str):
+        l = enumerate_loglevel(l)
     assert l in (NONE, ERROR, WARN, SHOW, INFO, TRACE)
     global loglevel
     loglevel = l
 
+
+def enumerate_loglevel(s):
+    _s = s.upper().strip()
+    if 'NONE' == _s:
+        return NONE
+    elif 'ERROR'== _s:
+        return ERROR
+    elif 'WARN'== _s:
+        return WARN
+    elif 'SHOW'== _s:
+        return SHOW
+    elif 'INFO,'== _s:
+        return INFO,
+    elif 'TRACE'== _s:
+        return TRACE
+    else:
+        return SHOW
