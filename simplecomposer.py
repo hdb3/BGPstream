@@ -3,20 +3,13 @@
 # simple-composer.py
 
 #from framework import Framework
-#from logger import *
-from simplesink import MySink
+from simplesink import Sink
 from simpletranslator import MyTranslator
 from simplesource import MySource
+from kafkasource import KafkaSource
 from compose import Compose
 from logger import *
 import inspect
-
-
-def classlookup(cls):
-    c = list(cls.__bases__)
-    for base in c:
-        c.extend(classlookup(base))
-    return c
 
 class MyCompose(Compose):
 
@@ -26,7 +19,7 @@ class MyCompose(Compose):
     def run1(self):
         show('start')
         source = MySource()
-        sink = MySink(source)
+        sink = Sink(source)
         sink.run()
         show('end')
 
@@ -38,5 +31,5 @@ class MyCompose(Compose):
         sink.run()
         show('end')
 
-set_loglevel(SHOW)
-MyCompose().run2()
+set_loglevel(TRACE)
+MyCompose().run1()
