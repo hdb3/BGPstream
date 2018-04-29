@@ -4,7 +4,7 @@ import yaml
 from kafka import KafkaConsumer
 import kafka.consumer.fetcher
 from kafka.errors import NoBrokersAvailable
-from logger import trace, info, show, warn, error
+from logger import stack_trace, trace, info, show, warn, error
 from framework import Framework
 from basemessage import BaseMessage
 from source import Source
@@ -19,7 +19,6 @@ class KafkaSource(Source):
         self.client_id = client_id
     
     def __iter__(self):
-        info("ITER START")
         while True:
             try:
                 self.consumer=KafkaConsumer( self.topic,
@@ -31,9 +30,9 @@ class KafkaSource(Source):
             except NoBrokersAvailable:
                 show("retrying connection to Kafka broker")
 
-        return self
+        return self.__gen__()
 
-    def __next__(self):
+    def __gen__(self):
         for message in self.consumer:
             yield message
-        consumer.close()
+        self.consumer.close()
