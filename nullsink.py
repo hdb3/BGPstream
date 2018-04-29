@@ -9,9 +9,6 @@ class NullSink(Sink):
 
     def __init__(self,source):
         self.input_type = BaseMessage
-        #assert issubclass(source,Source)
-        #assert source.output_type == self.input_type 
-        #self.next = source
         Sink.__init__(self,source)
     
     def run(self):
@@ -29,5 +26,5 @@ class NullSink(Sink):
     def _stop(self):
         pass
 
-    def _next(self):
+    def _next(self,msg):
         pass
