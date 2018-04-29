@@ -27,7 +27,6 @@ else:
 ymlfile = open(config_file, 'r')
 config = yaml.load(ymlfile)
 
-set_loglevel(SHOW)
 try:
     Compose().run(config['topic'],
                    config['bootstrap_servers'],

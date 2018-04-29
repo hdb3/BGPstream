@@ -30,6 +30,8 @@ class KafkaSource(Source):
             except NoBrokersAvailable:
                 show("retrying connection to Kafka broker")
 
+        show("connected to Kafka broker at %s" % self.bootstrap_servers)
+
         return self.__gen__()
 
     def __gen__(self):
