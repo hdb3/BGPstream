@@ -11,7 +11,7 @@ class Framework:
 
     def __init__(self):
         if version_info < (3,6):
-            error("python version >= 3.6 is required")
+            stderr.write("python version >= 3.6 is required")
             exit()
 
         #env_loglevel = os.environ.get('loglevel')

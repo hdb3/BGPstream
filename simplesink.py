@@ -1,11 +1,10 @@
 # simple-sink.py
 
 from logger import trace, info, show, warn, error
-from framework import Framework
 from basemessage import BaseMessage
 import sink
 
-class Sink(Framework):
+class Sink:
 
     def __init__(self,source):
 

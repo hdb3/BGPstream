@@ -1,26 +1,39 @@
 # tcpsource.py
 # refer to tcpsource.txt for details
 
+SOCKET_RETRY_LIMIT = 999
+
 import errno
 import os
 import sys
 import socket
 
 from logger import trace, info, show, warn, error
-from basemessage import WireMessage
+from basemessage import ByteStream
 import source
 
 class Source(source.Source):
 
-    #def __init__(self,address,active=True,passive=False,bufsiz=4096):
     def __init__(self,address,**kargs):
+        self.address = address
         if 'passive' in kargs:
-            self.passive = bool(kargs['passive'])
+            passive = bool(kargs['passive'])
+        else:
+            passive = True
+
+        if 'active' in kargs:
+            active = bool(kargs['active'])
+        else:
+            active = False
 
         assert active != passive
         self.passive = passive
-        self.output_type = WireMessage
-        self.bufsiz = bufsiz
+
+        if 'bufsiz' in kargs:
+            self.bufsiz = kargs['bufsiz']
+        else:
+            self.bufsiz = 4096
+        self.output_type = ByteStream
         source.Source.__init__(self)
     
     def __iter__(self):
@@ -32,7 +45,12 @@ class Source(source.Source):
 
     def __next__(self):
         try:
-            return self.sock.recv(BUFSIZ)
+            buf = self.sock.recv(self.bufsiz)
+            if buf:
+                return self.sock.recv(self.bufsiz)
+            else:
+                pass
+                # fall through to exit because the receive zero length indicates a closing connection
 
         except socket.timeout:
             self.sock.close()
@@ -76,10 +94,10 @@ class Source(source.Source):
                     info("bind - address in use - will wait and try again")
                     sleep(3)
             except (socket.herror,socket.gaierror) as e:
-                error("unrecoverable error %s" % e + " connecting to %s\n" % _name(self.address))
+                error("unrecoverable error %s" % e + " connecting to %s\n" % str(self.address))
                 break
             except Exception as e:
-                error(("unknown error %s" % e) + (" connecting to %s\n" % _name(self.address)))
+                error(("unknown error %s" % e) + (" connecting to %s\n" % str(self.address)))
                 break
 
         if bound:
@@ -96,11 +114,11 @@ class Source(source.Source):
         try:
             self.sock,self.remote_address = self.listen_sock.accept()
             self.sock.setblocking(True)
-            info("connected to %s\n" % _name(self.remote_address))
+            info("connected to %s\n" % str(self.remote_address))
             return
         except (socket.herror,socket.gaierror) as e:
-            error("unrecoverable error %s" % e + " connecting to %s\n" % _name(self.address))
+            error("unrecoverable error %s" % e + " connecting to %s\n" % str(self.address))
             exit()
         except Exception as e:
-            error(("unknown error %s" % e) + (" connecting to %s\n" % _name(self.address)))
+            error(("unknown error %s" % e) + (" connecting to %s\n" % str(self.address)))
             exit()

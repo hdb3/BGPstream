@@ -7,7 +7,8 @@ import yaml
 from logger import *
 import compose
 from tcpsource import Source
-from simplesink import Sink
+from bytesink import Sink
+#from simplesink import Sink
 
 class Compose(compose.Compose):
 
@@ -21,7 +22,7 @@ class Compose(compose.Compose):
 
     def run(self,address,passive):
         show('start')
-        source = Source(address,passive)
+        source = Source(address,passive=passive)
         sink = Sink(source)
         sink.run()
         show('end')
@@ -47,7 +48,7 @@ info("passive mode: %s" % str(passive))
 info("address mode: %s:%d" % address)
 
 try:
-    Compose().run(address,passive)
+    Compose().run(address,passive=passive)
 except KeyboardInterrupt:
     show("exit on keybaord interrupt")
 
