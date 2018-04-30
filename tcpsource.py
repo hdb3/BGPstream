@@ -1,12 +1,14 @@
 # tcpsource.py
 # refer to tcpsource.txt for details
 
-SOCKET_RETRY_LIMIT = 999
+CONNECT_RETRY_LIMIT = 999
+CONNECT_RETRY_DELAY = 10
 
 import errno
 import os
 import sys
 import socket
+from time import sleep
 
 from logger import trace, info, show, warn, error
 from basemessage import ByteStream
@@ -14,25 +16,11 @@ import source
 
 class Source(source.Source):
 
-    def __init__(self,address,**kargs):
+    def __init__(self,address,passive=True, bufsiz=4096):
+
         self.address = address
-        if 'passive' in kargs:
-            passive = bool(kargs['passive'])
-        else:
-            passive = True
-
-        if 'active' in kargs:
-            active = bool(kargs['active'])
-        else:
-            active = False
-
-        assert active != passive
         self.passive = passive
-
-        if 'bufsiz' in kargs:
-            self.bufsiz = kargs['bufsiz']
-        else:
-            self.bufsiz = 4096
+        self.bufsiz = bufsiz
         self.output_type = ByteStream
         source.Source.__init__(self)
     
@@ -69,8 +57,27 @@ class Source(source.Source):
         raise StopIteration
 
     def _active_init(self):
-        error("NOT IMPLEMENTED YET")
-        exit()
+        for n in range(CONNECT_RETRY_LIMIT):
+            try:
+                info("attempting connection to %s\n" % str(self.address))
+                self.sock = socket.create_connection(self.address,1)
+                self.remote_address = self.sock.getpeername()
+                self.sock.setblocking(True)
+                info("connected to %s\n" % str(self.address))
+                return
+
+            except (socket.error,socket.timeout) as e:
+                self.last_socket_error = e
+                sleep(CONNECT_RETRY_DELAY)
+                continue
+            except (socket.herror,socket.gaierror) as e:
+                error("unrecoverable error %s" % e + " connecting to %s\n" % str(self.address))
+                break
+            except Exception as e:
+                error("unknown error %s" % e + " connecting to %s\n" % str(self.address))
+                break
+
+        raise StopIteration
 
 
     def _passive_init(self):
@@ -81,7 +88,7 @@ class Source(source.Source):
 
         info("binding socket to %s\n" % str(self.address))
         bound = False
-        for i in range(SOCKET_RETRY_LIMIT):
+        for i in range(CONNECT_RETRY_LIMIT):
             try:
                 self.listen_sock.bind(self.address)
                 bound = True
@@ -92,7 +99,7 @@ class Source(source.Source):
                     break
                 else:
                     info("bind - address in use - will wait and try again")
-                    sleep(3)
+                    sleep(CONNECT_RETRY_DELAY)
             except (socket.herror,socket.gaierror) as e:
                 error("unrecoverable error %s" % e + " connecting to %s\n" % str(self.address))
                 break
