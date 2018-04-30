@@ -14,20 +14,17 @@ class Translator(Source):
         Framework.__init__(self)
         self.output_type = type(BaseMessage)
         self.input_type = type(BaseMessage)
-        s = Source()
         assert issubclass(type(source),Source)
         assert source.output_type == self.input_type 
         self.next = source
     
     def __iter__(self):
         self.iter = iter(self.next)
-        info("start")
         return self
 
     def __next__(self):
         try:
             msg = next(self.iter)
-            info("next")
             return self.translate(msg)
         except StopIteration:
             info("stop")

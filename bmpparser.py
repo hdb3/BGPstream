@@ -1,20 +1,17 @@
-# bmpsink.py
+# bmpparser.py
 
 from logger import trace, info, show, warn, error
 from framework import Framework
 from basemessage import WireMessage
-from sink import Sink
+import sink
 from bgplib.bmpparse import BMP_message
 from bgplib.bmpapp import BmpContext
 
-class BMPSink(Sink):
+class Sink(sink.Sink):
 
     def __init__(self,source):
         self.input_type = type(WireMessage)
-        #assert issubclass(source,Source)
-        #assert source.output_type == self.input_type 
-        #self.next = source
-        Sink.__init__(self,source)
+        sink.Sink.__init__(self,source)
     
     def run(self):
         info("run starts")
@@ -33,6 +30,9 @@ class BMPSink(Sink):
                 _min = len(msg)
             parsed_message = BMP_message(msg)
             context.parse(parsed_message)
+            if n>100:
+                show("exit after 100 BMP messages")
+                break
 
         show("%d messages read" % n)
         show("%d bytes read" % s)

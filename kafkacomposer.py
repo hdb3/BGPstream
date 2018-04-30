@@ -4,7 +4,9 @@
 
 import sys
 import yaml
-from oBMPsink import OSink
+#from oBMPsink import OSink
+from oBMPtoBMP import Translator
+from bmpparser import Sink
 from kafkasource import KafkaSource
 import compose
 from logger import *
@@ -14,8 +16,8 @@ class Compose(compose.Compose):
     def run(self,topic,bootstrap_servers,client_id):
         show('start')
         source = KafkaSource(topic,bootstrap_servers,client_id)
-        #translator = BStoBMPwf(source)
-        OSink(source).run()
+        translator = Translator(source)
+        Sink(translator).run()
         show('end')
 
 
