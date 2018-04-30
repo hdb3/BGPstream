@@ -1,0 +1,47 @@
+
+
+TH ecore design pattern is the composition of modules for message flow.
+The mechanism for composing modules (=external aspect) and building modules (=internal aspect) are distinct.
+Also, the mechanisms for implementation are distinct for the high level design.
+Objective - the objective of the design is to separate the design and implmentation of the functional modules that transform, consume or generate packets from the mechanisms of composition.  So for instance, messages can be sourced from files, network endpoints or other modules but processed by the same module, without that module having knowledge of the specific source or sink.
+
+The binding is done by passing a reference to a message source to a message consumer at run time - the message source must have a common structure which all messagae consumers can understatnd.  The source provides some metadata when bound by the sink which enables sanity check that the two parties are using the same message type.  In the initial design the message flow is accomplished by 'pull' - a message consumer calls a method on the source to return the next message: if no message is available, the thread of execution in the consumer blocks.  The source can alsosignal to the consumer that the message flow has ended.  The use of a method call to pass messages could be replaced by an asynchrounous mechaisms such as sockets or a software queue implementation.
+Internal design - python specific notes: the basic design pattern for a module is a message loop, precedded by initial processing and followed by termination processing.  This iterative structure can be implmented in python on several ways - and the detail has impact on the external design.  The chosen solution is to require every message source to be a python iterator: this makes the module structure of a consumer both simple and consistent, and allows common patterns to be abstracted/hiddedn by a class hierarchy, reducung further the line count and complexity of a functional module.  THis approach levase two disticnt options for structuring a message source - the iterator pattern and the generator pattern.  An iterator pattern exposes a 'next' method, which is repeatedly called by the consumer.  Between invocations of 'next', state is held by the object of which 'next' is an attribute.  The alternate approach is the 'generator' - a python generator is an object which also supports a 'next' method - the difference is that a generator is coded as a long lived thread (typically a loop), which yields control to pass messages out, but resumes execution in the same thread when the message consumer returns for another message.  Why does this matter?  Depending on the specifics (and whether existing code is being integrated) each pattern may be more natural; the good news is that either pattern can be used without external impact.  The design _could_ have adopted a generator as the explicit integration technique, in which case 'itertaor' based modules would need to provide support for wrapping their iterators on a generator - the solution which uses the _iterator_ as a pattern provides a mechanism to enable generator style modules.  Here is the nitty gritty about this:
+
+A python iterator is an object; it has a method attribute called '__iter__'; the __iter__() method must return another object (though it may be the same - i.e., __iter__() may return 'self'; and the object returned by __iter__ must support another method attribute, called __next__.  In operation, an iter object is called just once, via its __iter_() method: the object returned is then called multiple times via its __next__ method.
+In contrast, a generator is an object which has a __next__ attribute, which behaves just as the object returned by an iterator from __iter__().
+Thus we can see that an iterator is simply a wrapper around a generator - and if a generator is the chosen implmentation method for a module, it can be rendered as an iterator simply by implmenting an __iter__ method on an object which returns a generator.
+
+
+'generator' approach
+
+class Gen:
+
+   def __iter__():
+       return self.generator()
+
+   def generator():
+      initialiase()
+      while True:
+         r = process()
+         if end_condition:
+            break
+         yield r
+      cleanup()
+
+
+'iterator' approach
+
+
+class Iter:
+
+   def __iter__():
+      initialiase()
+      return self
+
+   def __next__():
+         r = process()
+         if end_condition:
+            raise StopIteration
+         else:
+             return r
