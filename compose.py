@@ -11,5 +11,3 @@ class Compose(Framework):
 
     def __init__(self):
         Framework.__init__(self)
-
-set_loglevel(SHOW)

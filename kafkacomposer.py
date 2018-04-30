@@ -17,7 +17,15 @@ class Compose(compose.Compose):
         show('start')
         source = KafkaSource(topic,bootstrap_servers,client_id)
         translator = Translator(source)
-        Sink(translator).run()
+        sink = Sink(translator)
+        sink.run()
+        show('end')
+
+    def _run(self,topic,bootstrap_servers,client_id):
+        show('start')
+        source = KafkaSource(topic,bootstrap_servers,client_id)
+        sink = OSink(source)
+        sink.run()
         show('end')
 
 

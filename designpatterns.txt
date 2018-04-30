@@ -45,3 +45,24 @@ class Iter:
             raise StopIteration
          else:
              return r
+
+Concrtete imlmentations
+The modules 'source' and 'sink' implment producers and consumers - both can be 'iterator' or 'gneretaor' patterns.
+The sink pattern can be simpler:
+
+class Sink:
+
+    def __init__(self,source):
+        ...
+        self.next = source
+    
+    def run(self):
+        initialiase()
+        for msg in self.next:
+            process(msg)
+        cleanup()
+
+
+Note - this exhibits the external binding mechanism - the sink is 'bound' to a source via __init__() - and then the process is started by calling run().
+It could have been done by incorprating the 'run()' code in __init__, however it is clearer this way and enables __init__() to provide some common processing logic via a call to the super class.
+In practice, 'sink' also sanity checks the type of the source object and the source object's output message type.

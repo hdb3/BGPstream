@@ -3,19 +3,21 @@
 # skeleton source using the default, iterative, style
 
 from logger import trace, info, show, warn, error
-from framework import Framework
+#from framework import Framework
 from basemessage import BaseMessage
 
-class Source(Framework):
+class Source:
 
     def __init__(self):
-        Framework.__init__(self)
-        self.output_type = type(BaseMessage)
+        trace()
+        pass
     
     def __iter__(self):
+        trace()
         return self
 
     def __next__(self):
+        trace()
         if False:
             raise StopIteration
         msg = BaseMessage()

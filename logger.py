@@ -1,5 +1,6 @@
 import datetime
 import sys
+import os
 from traceback import extract_stack
 from os.path import basename,splitext
 
@@ -9,9 +10,7 @@ SHOW  = 3
 WARN  = 2
 ERROR = 1
 NONE  = 0
-
-loglevel = TRACE
-logfile = sys.stderr
+DEFAULT_LOGLEVEL = SHOW
 
 def __write(s,l):
     if l == 'STACK':
@@ -25,17 +24,23 @@ def __write(s,l):
         loc = splitext(basename(frame))[0].ljust(8)
     global logfile
     ts = datetime.datetime.now().strftime("%x %X")
-    logfile.write("%s %s [%s] -- %s\n" % (l, ts, loc, s))
+    if s:
+        logfile.write("%s %s [%s] -- %s\n" % (l, ts, loc, s))
+    else:
+        logfile.write("%s %s [%s]\n" % (l, ts, loc))
           
 def stack_trace():
     global loglevel
     if loglevel >= TRACE:
         __write("",'STACK')
 
-def trace(s):
+def trace(*args):
     global loglevel
     if loglevel >= TRACE:
-        __write(s,'TRACE')
+        if args:
+            __write(args[0],'TRACE')
+        else:
+            __write(None,'TRACE')
                             
 def info(s):
     global loglevel
@@ -80,4 +85,15 @@ def enumerate_loglevel(s):
     elif 'TRACE'== _s:
         return TRACE
     else:
-        return SHOW
+        return DEFAULT_LOGLEVEL
+
+
+
+if 'loglevel' not in globals():
+    logfile = sys.stderr
+    env_loglevel = os.environ.get('loglevel')
+    if env_loglevel:
+        set_loglevel(env_loglevel)
+        sys.stderr.write("setting loglevel from environment: [%s]\n" % env_loglevel)
+    else:
+        loglevel = DEFAULT_LOGLEVEL

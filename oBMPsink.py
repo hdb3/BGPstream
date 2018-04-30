@@ -14,6 +14,4 @@ class OSink(nullsink.NullSink):
     
     def _next(self,message):
         assert isinstance(message,kafka.consumer.fetcher.ConsumerRecord)
-        trace("kafka message received")
         bmp_msg = oBMP_parse(bytearray(message.value))
-        info("type of BMP message %s" % str(type(bmp_msg)))

@@ -1,0 +1,11 @@
+
+
+tcpsource.py
+
+forward data from a TCP session over the framework
+session close ends the iteration, however the source can be restarted if required
+(TBD the mechanism for this - will need another entry point? calling __next_again after StopIteration could be used but risks unintended consequences - perhaps the framework should explicityly restart the chain......
+an alternative would be to _not_ raise the StopIteration, and allow the module to go back into connection  mode....)
+
+opertates in two modes - active and passive - once connected is otherwise identical
+

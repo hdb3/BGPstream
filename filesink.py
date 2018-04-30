@@ -1,27 +1,25 @@
-# bmpparser.py
+# simplesource.py
 
 from logger import trace, info, show, warn, error
-from framework import Framework
-from basemessage import WireMessage
+from basemessage import ByteStream
 import sink
-from bgplib.bmpparse import BMP_message
-from bgplib.bmpapp import BmpContext
 
 class Sink(sink.Sink):
 
-    def __init__(self,source):
+    def __init__(self,fn):
         trace()
         self.input_type = WireMessage
+        self.fn = fn
+        self.file = open(self.fn,'wb')
         sink.Sink.__init__(self,source)
     
     def run(self):
         trace()
-        info("run starts")
         n = 0
         s = 0
         _max = 0
         _min = None
-        context = BmpContext("unknown")
+
         for msg in self.iter:
             trace()
             assert issubclass(type(msg),WireMessage), "unexpected message type: %s" % str(type(msg))
@@ -31,11 +29,9 @@ class Sink(sink.Sink):
                 _max = len(msg)
             if not _min or _min > len(msg):
                 _min = len(msg)
-            parsed_message = BMP_message(msg)
-            context.parse(parsed_message)
-            if n>100:
-                show("exit after 100 BMP messages")
-                break
+            self.file.write(msg)
+
+        self.file.close()
 
         show("%d messages read" % n)
         show("%d bytes read" % s)
