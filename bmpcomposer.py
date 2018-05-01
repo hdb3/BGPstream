@@ -26,20 +26,22 @@ config = get_config("bmpcomposer.yml")
 
 if config['mode'].upper() == 'FILE':
     source = filesource.Source(config['filename'])
-    translator = wfBMP.Translator(source)
-    sink = bmpparser.Sink(translator)
+    # translator = wfBMP.Translator(source)
+    # sink = bmpparser.Sink(translator)
 elif config['mode'].upper() == 'ACTIVE':
     source = tcpsource.Source( (config['host'],int(config['port'])),passive=False)
-    sink = bmpparser.Sink(source)
+    # sink = bmpparser.Sink(source)
 elif config['mode'].upper() == 'PASSIVE':
     source = tcpsource.Source( (config['host'],int(config['port'])),passive=True)
-    sink = bmpparser.Sink(source)
+    # sink = bmpparser.Sink(source)
 else:
     error("could not determine file/active/passive mode")
     exit()
 
 
 try:
+    translator = wfBMP.Translator(source)
+    sink = bmpparser.Sink(translator)
     sink.run()
 except KeyboardInterrupt:
     show("exit on keybaord interrupt")
