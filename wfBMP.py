@@ -8,7 +8,8 @@ import source as sourcex
 
 class Translator(sourcex.Source):
 
-    def __init__(self,source):
+    def __init__(self,source,limit=None):
+        self.limit = limit
         self.output_type = WireMessage
         self.input_type = ByteStream
         assert self.input_type == source.output_type
@@ -31,6 +32,10 @@ class Translator(sourcex.Source):
         return rbuf
 
     def __next__(self):
+        if self.limit is not None and self.limit >= self.n:
+            warn("exiting read loop on limit %d" % self.n)
+            raise StopIteration
+
         try:
             msg = self.read(6)
             version  = struct.unpack_from('!B', msg, offset=0)[0]

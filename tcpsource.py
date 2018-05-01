@@ -16,8 +16,9 @@ import source
 
 class Source(source.Source):
 
-    def __init__(self,address,passive=True, bufsiz=4096):
+    def __init__(self,address,passive=True, bufsiz=4096,limit=None):
 
+        self.limit = limit
         self.address = address
         self.passive = passive
         self.bufsiz = bufsiz
@@ -25,6 +26,7 @@ class Source(source.Source):
         source.Source.__init__(self)
     
     def __iter__(self):
+        self.count = 0
         if self.passive:
             self._passive_init()
         else:
@@ -32,6 +34,9 @@ class Source(source.Source):
         return self
 
     def __next__(self):
+        self.count += 1
+        if self.limit is not None and self.limit <= self.count:
+            raise StopIteration
         try:
             buf = self.sock.recv(self.bufsiz)
             if buf:

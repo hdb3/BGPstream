@@ -9,9 +9,9 @@ def __arg_parse(s):
     else:
         sys.exit("could not parse '%s'" % s)
 
-def args_parse():
+def args_parse(start=1):
     arg_dict = {}
-    arg_list = sys.argv[1:]
+    arg_list = sys.argv[start:]
     for arg in arg_list:
         (k,v) = __arg_parse(arg)
         arg_dict[k] = v

@@ -1,7 +1,6 @@
 # bmpparser.py
 
 from logger import trace, info, show, warn, error
-from framework import Framework
 from basemessage import WireMessage
 import sink
 from bgplib.bmpparse import BMP_message
