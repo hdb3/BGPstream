@@ -21,7 +21,6 @@ class Source(source.Source):
         return self
 
     def __next__(self):
-        trace("")
         self.count += 1
         if self.limit is not None and self.limit <= self.count:
             raise StopIteration

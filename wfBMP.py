@@ -54,5 +54,4 @@ class Translator(sourcex.Source):
         except StopIteration:
             info("ITER END (%d cycles)" % self.n)
             raise
-
         return WireMessage(msg)

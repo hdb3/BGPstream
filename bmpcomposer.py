@@ -7,7 +7,6 @@ import bmpparser
 import tcpsource
 import filesource
 import wfBMP
-#from argparse import args_parse
 from utils import get_config
 
 config = get_config()

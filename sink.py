@@ -8,7 +8,7 @@ from source import Source
 class Sink:
 
     def __init__(self,source):
-        trace("source %s providing message type %s, expecting message type %s" % (str(type(source)), str(source.output_type), str(self.input_type)))
+        #trace("source %s providing message type %s, expecting message type %s" % (str(type(source)), str(source.output_type), str(self.input_type)))
         assert issubclass(type(source),Source), "source class is %s" % str(type(source))
         assert source.output_type == self.input_type , "incompatible types- source:%s/expected:%s" % (str(source.output_type), str(self.input_type))
         self.source = source
