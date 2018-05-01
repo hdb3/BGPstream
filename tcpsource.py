@@ -40,7 +40,7 @@ class Source(source.Source):
         try:
             buf = self.sock.recv(self.bufsiz)
             if buf:
-                return self.sock.recv(self.bufsiz)
+                return buf
             else:
                 pass
                 # fall through to exit because the receive zero length indicates a closing connection
