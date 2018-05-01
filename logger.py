@@ -89,6 +89,10 @@ def enumerate_loglevel(s):
 
 
 
+if sys.version_info < (3,6):
+    sys.stderr.write("python version >= 3.6 is required")
+    exit()
+
 if 'loglevel' not in globals():
     logfile = sys.stderr
     env_loglevel = os.environ.get('loglevel')
