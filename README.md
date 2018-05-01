@@ -8,3 +8,4 @@ python >= 3.6 is required
 recommend: venv - (install: python3 -m venv <pwd>, use: source ./bin/activate)
 
 libraries: bgplib, a branch of oBMP; install as a subdirectory
+(git clone -b bgplib git@github.com:hdb3/oBMP.git bgplib)
