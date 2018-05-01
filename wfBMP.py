@@ -1,23 +1,23 @@
 # wfBMP.py
 
-from logger import trace, info, show, warn, error
-#from framework import Framework
-from basemessage import WireMessage, ByteStream
-from translator import Translator
 import struct
+from logger import trace, info, show, warn, error
+from basemessage import WireMessage, ByteStream
+#from translator import Translator
+import source as sourcex
 
-class BStoBMPwf(Translator):
+class Translator(sourcex.Source):
 
     def __init__(self,source):
-        self.output_type = type(WireMessage)
-        self.input_type = type(ByteStream)
-        Translator.__init__(self,source)
+        self.output_type = WireMessage
+        self.input_type = ByteStream
+        assert self.input_type == source.output_type
+        #source.Source.__init__(self,source)
+        self.iter = iter(source)
     
     def __iter__(self):
-        info("ITER START")
-        self.n = 0
         self.buf = bytearray()
-        self.iter = iter(self.next)
+        self.n = 0
         return self
 
     def read(self,count):
@@ -39,6 +39,7 @@ class BStoBMPwf(Translator):
             msg.extend(self.read(length-6))
             assert 3 == version, "failed version check, expected 3 got %x" % version
             assert msg_type < 7, "failed message type check, expected < 7, got %x" % msg_type
+            self.n += 1
 
 
         except AssertionError as ae:

@@ -1,24 +1,46 @@
 #!/usr/bin/env python
 
-# bgpcomposer.py
 
 import sys
-#from nullsink import NullSink
-from bmpsink import BMPSink
-from wfBMP import BStoBMPwf
-from filesource import FileSource
-from compose import Compose
+import yaml
 from logger import *
+import bmpparser
+import tcpsource
+import filesource
+import wfBMP
 
-class BMPCompose(Compose):
 
-    def run(self,fn):
-        show('start')
-        source = FileSource(fn)
-        translator = BStoBMPwf(source)
-        sink = BMPSink(translator)
-        sink.run()
-        show('end')
+def get_config(fn):
 
-set_loglevel(SHOW)
-BMPCompose().run(sys.argv[1])
+    if len(sys.argv) > 1:
+        config_file = sys.argv[1]
+    else:
+        config_file = fn
+
+    ymlfile = open(config_file, 'r')
+    return yaml.load(ymlfile)
+
+config = get_config("bmpcomposer.yml")
+
+# tcpsourcecomposer.py
+
+if config['mode'].upper() == 'FILE':
+    source = filesource.Source(config['filename'])
+    translator = wfBMP.Translator(source)
+    sink = bmpparser.Sink(translator)
+elif config['mode'].upper() == 'ACTIVE':
+    source = tcpsource.Source( (config['host'],int(config['port'])),passive=False)
+    sink = bmpparser.Sink(source)
+elif config['mode'].upper() == 'PASSIVE':
+    source = tcpsource.Source( (config['host'],int(config['port'])),passive=True)
+    sink = bmpparser.Sink(source)
+else:
+    error("could not determine file/active/passive mode")
+    exit()
+
+
+try:
+    sink.run()
+except KeyboardInterrupt:
+    show("exit on keybaord interrupt")
+

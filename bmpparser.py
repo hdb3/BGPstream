@@ -33,9 +33,6 @@ class Sink(sink.Sink):
                 _min = len(msg)
             parsed_message = BMP_message(msg)
             context.parse(parsed_message)
-            if n>100:
-                show("exit after 100 BMP messages")
-                break
 
         show("%d messages read" % n)
         show("%d bytes read" % s)
