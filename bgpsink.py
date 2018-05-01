@@ -1,25 +1,25 @@
-# simple-sink.py
 
 from logger import trace, info, show, warn, error
-from framework import Framework
-from basemessage import BaseMessage
-from sink import Sink
-import bgplib/bgpmsg
+from basemessage import WireMessage
+import sink
+import bgplib.bgpcontext
+from bgplib.bgpmsg import BGP_message,BGP_OPEN,BGP_KEEPALIVE,BGP_UPDATE,BGP_NOTIFICATION
 
-class MySink(Sink):
+class Sink(sink.Sink):
 
     def __init__(self,source):
-        self.input_type = type(BaseMessage)
-        #assert issubclass(source,Source)
-        #assert source.output_type == self.input_type 
-        #self.next = source
-        Sink.__init__(self,source)
+        self.input_type = WireMessage
+        sink.Sink.__init__(self,source)
     
     def run(self):
-        info("run starts")
         n = 0
-        for msg in self.next:
-            show("In %d" % msg.payload)
+        context = bgplib.bgpcontext.new_headless_context()
+        for msg in self.iter:
+            assert issubclass(type(msg),WireMessage), "unexpected message type: %s" % str(type(msg))
             n += 1
-            trace("process message %d" % n)
-        info("run ends - %d cycles" % n)
+            bgp_msg = BGP_message(msg)
+            msg_type = bgp_msg.bgp_type
+            trace("message %d type %d" % (n, msg_type))
+            #context.consume(msg)
+
+        show("%d messages read" % n)

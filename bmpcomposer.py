@@ -7,6 +7,7 @@ import bmpparser
 import tcpsource
 import filesource
 import wfBMP
+import bgpsink
 from utils import get_config
 
 config = get_config()
@@ -26,8 +27,9 @@ else:
     exit()
 
 try:
-    translator = wfBMP.Translator(source)
-    sink = bmpparser.Sink(translator)
+    translator1 = wfBMP.Translator(source)
+    translator2 = bmpparser.Sink(translator1)
+    sink = bgpsink.Sink(translator2)
     sink.run()
 except KeyboardInterrupt:
     show("exit on keybaord interrupt")
