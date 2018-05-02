@@ -41,6 +41,7 @@ class Sink(sink.Sink,source.Source):
         for msg in self.iter:
             assert issubclass(type(msg),WireMessage), "unexpected message type: %s" % str(type(msg))
             parsed_message = BMP_message(msg)
-            # (msg_type, peer_hash, rmsg) = context.parse(parsed_message)
-            yield BGPMessage(context.parse(parsed_message))
+            (msg_type, peer, rmsg) = context.parse(parsed_message)
+            if not rmsg is None:
+                yield BGPMessage((msg_type, peer, rmsg))
 
