@@ -20,6 +20,11 @@ As far as I can tell youi must cd to the submodule directory to commit any chang
 
 
 This helped in the submodule...
+or 
+> pushd bgplib ; git commit -a -m "<COMMIT MESSAGE>" ; git push origin HEAD:bgplib ; popd
+
+
+
 > git push origin HEAD:bgplib
 > git branch --remote
 > git checkout origin/bgplib
