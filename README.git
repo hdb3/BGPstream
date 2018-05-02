@@ -1,0 +1,26 @@
+
+here is how I added the submodule:
+> git submodule add -b bgplib git@github.com:hdb3/oBMP.git  bgplib
+
+I beleive that this command will pull updates in the remote branch:
+> git submodule update --recursive --remote
+
+ANd I beleive that this will set up the whole thing from scratch
+> git clone --recurse-submodules 
+
+
+This was useful too:
+> git config status.submodulesummary 1
+
+https://git-scm.com/book/en/v2/Git-Tools-Submodules
+
+As far as I can tell youi must cd to the submodule directory to commit any changes...
+
+> pushd bgplib ; git add modules.txt ; git commit -a -m "submodule update" ; popd
+
+
+This helped in the submodule...
+> git push origin HEAD:bgplib
+> git branch --remote
+> git checkout origin/bgplib
+

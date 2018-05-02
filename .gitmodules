@@ -1,0 +1,4 @@
+[submodule "bgplib"]
+	path = bgplib
+	url = git@github.com:hdb3/oBMP.git
+	branch = bgplib
