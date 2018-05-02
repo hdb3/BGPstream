@@ -1,37 +1,46 @@
 # bmpparser.py
 
-from logger import trace, info, show, warn, error
-from basemessage import WireMessage
+from logger import *
+from basemessage import WireMessage, BGPMessage
 import sink
+import source
 from bgplib.bmpparse import BMP_message
 from bgplib.bmpapp import BmpContext
 
-class Sink(sink.Sink):
+class Sink(sink.Sink,source.Source):
 
     def __init__(self,source):
         self.input_type = WireMessage
+        self.output_type = BGPMessage
         sink.Sink.__init__(self,source)
+        self.lock = False
+
+    def __iter__(self):
+        if self.lock:
+            error("this module is not re-entrant")
+            exit()
+        else:
+            self.lock = True
+            return self._gen()
     
+    #  the module can act as both an endpoint ('sink') and a translator ('sink+source')
+    # 'run' method is for usage as a sink
+    # this trick is a candidate for pushing into the parent class 'Sink'
+    # but that begs question of whther any sinks are really just sinks....
+
+
     def run(self):
-        info("run starts")
         n = 0
-        s = 0
-        _max = 0
-        _min = None
+        for bgp_message in self.__iter__():
+            n += 1
+        info("%d messages read" % n)
+
+    def _gen(self):
+        trace("")
         context = BmpContext("unknown")
         for msg in self.iter:
             assert issubclass(type(msg),WireMessage), "unexpected message type: %s" % str(type(msg))
-            n += 1
-            s += len(msg)
-            if len(msg) > _max:
-                _max = len(msg)
-            if not _min or _min > len(msg):
-                _min = len(msg)
             parsed_message = BMP_message(msg)
-            context.parse(parsed_message)
+            # (msg_type, peer_hash, rmsg) = context.parse(parsed_message)
+            yield BGPMessage(context.parse(parsed_message))
 
-        show("%d messages read" % n)
-        show("%d bytes read" % s)
-        show("%d = average message size" % int(s/n))
-        show("%d = minimum message size" % _min)
-        show("%d = maximum message size" % _max)
