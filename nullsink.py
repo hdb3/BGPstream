@@ -1,21 +1,21 @@
 # nullsink.py
 
-from logger import trace, info, show, warn, error
-from framework import Framework
+from logger import *
 from basemessage import BaseMessage
-from sink import Sink
+import sink
 
-class NullSink(Sink):
+class Sink(sink.Sink):
 
     def __init__(self,source):
         self.input_type = BaseMessage
-        Sink.__init__(self,source)
+        sink.Sink.__init__(self,source)
     
     def run(self):
         n = 0
         self._start()
         for msg in self.next:
             n += 1
+            trace("msg %d" % n)
             self._next(msg)
         show("%d messages read" % n)
         self._stop()
