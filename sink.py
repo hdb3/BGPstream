@@ -18,5 +18,5 @@ class Sink:
         n = 0
         for msg in self.iter:
             n += 1
-            trace("msg %d" % n))
+            trace("msg %d" % n)
         show("run ends - %d cycles" % n)
