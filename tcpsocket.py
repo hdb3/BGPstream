@@ -24,6 +24,12 @@ class Socket:
         else:
             self._active_init()
 
+    def send(self,msg):
+        try:
+            self.sock.sendall(msg)
+        except socket.error as errmsg:
+            error("socket.error %s" % errmsg)
+
     def recv(self,bufsiz):
         trace()
         try:
