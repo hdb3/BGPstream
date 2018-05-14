@@ -4,43 +4,19 @@
 
 import sys
 import yaml
-#from oBMPsink import OSink
-from oBMPtoBMP import Translator
-from bmpparser import Sink
-from kafkasource import KafkaSource
-import compose
+import oBMPtoBMP
+import bmpparser
+import kafkasource
 from logger import *
+from utils import get_config
 
-class Compose(compose.Compose):
+config = get_config()
 
-    def run(self,topic,bootstrap_servers,client_id):
-        show('start')
-        source = KafkaSource(topic,bootstrap_servers,client_id)
-        translator = Translator(source)
-        sink = Sink(translator)
-        sink.run()
-        show('end')
-
-    def _run(self,topic,bootstrap_servers,client_id):
-        show('start')
-        source = KafkaSource(topic,bootstrap_servers,client_id)
-        sink = OSink(source)
-        sink.run()
-        show('end')
-
-
-if len(sys.argv) > 1:
-    config_file = sys.argv[1]
-else:
-    config_file = "kafkacomposer.yml"
-
-ymlfile = open(config_file, 'r')
-config = yaml.load(ymlfile)
+source = kafkasource.Source(config['topic'],config['bootstrap_servers'],config['client_id'])
+translator = oBMPtoBMP.Translator(source)
+sink = bmpparser.Sink(translator)
 
 try:
-    Compose().run(config['topic'],
-                   config['bootstrap_servers'],
-                   config['client_id'])
+    sink.run()
 except KeyboardInterrupt:
     print("exit on keybaord interrupt")
-

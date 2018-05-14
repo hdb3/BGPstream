@@ -1,10 +1,10 @@
 # oBMPsink.py
 
-from logger import stack_trace, trace, info, show, warn, error
+from logger import *
 from source import Source
 from sink import Sink
 from basemessage import WireMessage
-import kafka.consumer.fetcher
+import kafka.consumer.fetcher # note this only required to do a type check!!!
 from bgplib.oBMPparse import oBMP_parse
 
 class Translator(Sink, Source):
