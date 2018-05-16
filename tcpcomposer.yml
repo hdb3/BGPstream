@@ -1,0 +1,8 @@
+source:
+        mode: active
+        host: 10.30.65.225
+        port: 5000
+sink:
+        mode: active
+        host: localhost
+        port: 55000

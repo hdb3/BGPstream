@@ -9,10 +9,10 @@ import sink
 
 class Sink(sink.Sink):
 
-    def __init__(self, source, address,passive=True):
+    def __init__(self, source, address, passive=True):
         self.input_type = ByteStream
         sink.Sink.__init__(self,source)
-        self.tcpsocket = tcpsocket.Socket(address,passive)
+        self.tcpsocket = tcpsocket.Socket(address, passive)
     
     def run(self):
         n = 0
